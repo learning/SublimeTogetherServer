@@ -1,0 +1,23 @@
+{
+  "name": "SublimeTogetherServer",
+  "version": "0.0.1",
+  "description": "A Server for SublimeTogether",
+  "main": "app.js",
+  "dependencies": {
+    "archiver": "~0.6.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/learning/SublimeTogetherServer.git"
+  },
+  "keywords": [
+    "sublime",
+    "Synchronized Editing"
+  ],
+  "author": "Yongning Liang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/learning/SublimeTogetherServer/issues"
+  }
+}

@@ -2,7 +2,7 @@ import config, socket, threading, struct, pickle
 from lib import in_cmd, out_cmd, handlers
 
 __NAME__ = 'SublimeTogetherServer'
-__VERSION__ = '0.0.2'
+__VERSION__ = '0.0.3'
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((config.host, config.port))
@@ -14,8 +14,10 @@ pool = []
 class SocketHandlerThread(threading.Thread):
     '''Handler class for each socket connection from client'''
 
+    user_name = ""
     socket = None
     address = None
+    enabled = True
 
     head = [0xa9, 0x5f, 0xca]
 
@@ -29,18 +31,20 @@ class SocketHandlerThread(threading.Thread):
         global config
         try:
             self.send('message', '[%s/%s] Server connected.' % (__NAME__, __VERSION__))
-            while True:
+            while self.enabled:
                 self.read_command()
         except ConnectionError as err:
+            print(err)
+        finally:
             self.socket.close()
             remove_thread(self)
-            print('disconnected', err)
 
     def read_command(self, offset = 0):
         '''read command from client'''
-        byte = self.socket.recv(1)[0]
-        # print(byte, self.head[offset])
-        # print(byte == self.head[offset])
+        try:
+            byte = self.socket.recv(1)[0]
+        except IndexError as err:
+            raise ConnectionError("Client %s:%s disconnected." % self.address)
         if byte == self.head[offset]:
             if offset is 2:
                 tmp = self.socket.recv(5)
@@ -73,13 +77,13 @@ class SocketHandlerThread(threading.Thread):
         # print('all_data:', all_data)
         self.socket.sendall(header + command + length + out)
 
-    def stop(self):
-        if self.sock is not None:
-            self.sock.close()
+    def close(self):
+        self.enabled = False
+        print('Connection for %s:%s closed.' % self.address)
 
 def remove_thread(thread):
     '''remove spicified thread from the pool'''
-    # print(pool)
+    global pool
     new_pool = []
     for item in pool:
         if item is not thread:

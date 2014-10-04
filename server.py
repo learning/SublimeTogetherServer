@@ -19,6 +19,7 @@ class SocketHandlerThread(threading.Thread):
     address = None
     enabled = True
 
+    # Data header for each request
     head = [0xa9, 0x5f, 0xca]
 
     def __init__(self, socket, address):

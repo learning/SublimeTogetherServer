@@ -44,28 +44,30 @@ class Application(tk.Frame):
         self.createWidgets()
 
     def createWidgets(self):
-        self.btn_start = tk.Button(self, text="Start", command=self.start_server)
-        self.btn_start.pack(side="top")
-        self.btn_stop = tk.Button(self, text="Stop", command=self.stop_server)
-        self.btn_stop.pack(side="top")
+        self.left_frame = tk.Frame(self)
+        self.left_frame.pack(side="left")
+        self.right_frame = tk.Frame(self)
+        self.right_frame.pack(side="right")
 
-        self.user_title = tk.Label(self, text="Users")
-        self.user_title.pack(side="left")
-        self.user_list = tk.Listbox(self)
-        self.user_list.pack(side="left")
-        self.btn_add_user = tk.Button(self, text="Add")
-        self.btn_add_user.pack(side="left")
-        self.btn_remove_user = tk.Button(self, text="Remove")
-        self.btn_remove_user.pack(side="left")
+        self.online_label = tk.Label(self.right_frame, text="Onlines")
+        self.online_label.pack(side="top")
+        self.online_list = tk.Listbox(self.right_frame)
+        self.online_list.pack(side="top")
+        self.manage_button = tk.Button(self.right_frame, text="Manage Users",
+            command=self.manage_users)
+        self.manage_button.pack(side="bottom")
 
-        self.console = tkinter.scrolledtext.ScrolledText(self)
-        self.console.pack(side="bottom")
+        self.console = tkinter.scrolledtext.ScrolledText(self.left_frame)
+        self.console.pack(side="top")
+        self.control_button = tk.Button(self.left_frame, text="Start",
+            command=self.control_server)
+        self.control_button.pack(side="bottom")
 
-    def start_server(self):
-        self.console.insert(tk.END, "[%s] Starting server...\n" % time.ctime())
+    def control_server(self):
+        self.console.insert(tk.END, "[%s] Controlling server...\n" % time.ctime())
 
-    def stop_server(self):
-        self.console.insert(tk.END, "[%s] Stopping server...\n" % time.ctime())
+    def manage_users(self):
+        self.console.insert(tk.END, "[%s] Managing users...\n" % time.ctime())
 
 root = tk.Tk()
 root.title("SublimeTogetherServer")

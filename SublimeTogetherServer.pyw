@@ -42,6 +42,7 @@ class Application(tk.Frame):
         tk.Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
+        self.log("Standby.")
 
     def createWidgets(self):
         self.left_frame = tk.Frame(self)
@@ -51,23 +52,26 @@ class Application(tk.Frame):
 
         self.online_label = tk.Label(self.right_frame, text="Onlines")
         self.online_label.pack(side="top")
-        self.online_list = tk.Listbox(self.right_frame)
+        self.online_list = tk.Listbox(self.right_frame, height=16)
         self.online_list.pack(side="top")
         self.manage_button = tk.Button(self.right_frame, text="Manage Users",
             command=self.manage_users)
         self.manage_button.pack(side="bottom")
 
-        self.console = tkinter.scrolledtext.ScrolledText(self.left_frame)
+        self.console = tkinter.scrolledtext.ScrolledText(self.left_frame, height=20, width=60)
         self.console.pack(side="top")
         self.control_button = tk.Button(self.left_frame, text="Start",
             command=self.control_server)
         self.control_button.pack(side="bottom")
 
+    def log(self, text=""):
+        self.console.insert(tk.END, "[%s] %s\n" % (time.strftime("%H:%M:%S"), text))
+
     def control_server(self):
-        self.console.insert(tk.END, "[%s] Controlling server...\n" % time.ctime())
+        self.log("Controlling server...")
 
     def manage_users(self):
-        self.console.insert(tk.END, "[%s] Managing users...\n" % time.ctime())
+        self.log("Managing users...")
 
 root = tk.Tk()
 root.title("SublimeTogetherServer")

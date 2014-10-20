@@ -50,13 +50,16 @@ class Application(tk.Frame):
         self.right_frame = tk.Frame(self)
         self.right_frame.pack(side="right")
 
-        self.online_label = tk.Label(self.right_frame, text="Onlines")
-        self.online_label.pack(side="top")
-        self.online_list = tk.Listbox(self.right_frame, height=16)
-        self.online_list.pack(side="top")
-        self.manage_button = tk.Button(self.right_frame, text="Manage Users",
-            command=self.manage_users)
-        self.manage_button.pack(side="bottom")
+        self.users_label = tk.Label(self.right_frame, text="Onlines")
+        self.users_label.pack(side="top")
+        self.users_list = tk.Listbox(self.right_frame, height=16)
+        self.users_list.pack(side="top")
+        self.manage_frame = tk.Frame(self.right_frame)
+        self.manage_frame.pack(side="bottom")
+        self.add_button = tk.Button(self.manage_frame, text="Add", command=self.add_user)
+        self.add_button.pack(side="left")
+        self.delete_button = tk.Button(self.manage_frame, text="Delete", command=self.delete_user)
+        self.delete_button.pack(side="right")
 
         self.console = tkinter.scrolledtext.ScrolledText(self.left_frame, height=20, width=60)
         self.console.pack(side="top")
@@ -70,8 +73,11 @@ class Application(tk.Frame):
     def control_server(self):
         self.log("Controlling server...")
 
-    def manage_users(self):
-        self.log("Managing users...")
+    def add_user(self):
+        self.log("Add user...")
+
+    def delete_user(self):
+        self.log("Delete user...")
 
 root = tk.Tk()
 root.title("SublimeTogetherServer")

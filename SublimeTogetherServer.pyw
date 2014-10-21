@@ -56,7 +56,7 @@ class Application(tk.Frame):
         self.users_list.pack(side="top")
         self.manage_frame = tk.Frame(self.right_frame)
         self.manage_frame.pack(side="bottom")
-        self.add_button = tk.Button(self.manage_frame, text="Add", command=self.add_user)
+        self.add_button = tk.Button(self.manage_frame, text="Add", command=self.add_user_dialog)
         self.add_button.pack(side="left")
         self.delete_button = tk.Button(self.manage_frame, text="Delete", command=self.delete_user)
         self.delete_button.pack(side="right")
@@ -73,8 +73,42 @@ class Application(tk.Frame):
     def control_server(self):
         self.log("Controlling server...")
 
-    def add_user(self):
+    def add_user_dialog(self):
+        self.add_dialog = tk.Toplevel(self)
+
+        left_side = tk.Frame(self.add_dialog)
+        left_side.pack(side="left")
+        right_side = tk.Frame(self.add_dialog)
+        right_side.pack(side="left")
+
+        username_label = tk.Label(left_side, text="Username")
+        username_label.pack(side="top")
+        self.username = tk.StringVar()
+        self.username_input = tk.Entry(right_side, textvariable=self.username)
+        self.username_input.pack(side="top")
+        password_label = tk.Label(left_side, text="Password")
+        password_label.pack(side="top")
+        self.password = tk.StringVar()
+        self.password_input = tk.Entry(right_side, textvariable=self.password, show='*')
+        self.password_input.pack(side="top")
+
+        confirm_button = tk.Button(self.add_dialog, text="Confirm", command=self.add_user)
+        confirm_button.pack(side="right")
+
+        self.add_dialog.focus_set()
+        self.add_dialog.grab_set_global()
+        self.add_dialog.transient(self)
         self.log("Add user...")
+
+    def add_user(self):
+        username = self.username.get()
+        password = self.password.get()
+        sql = "INSERT INTO users VALUES('%s', '%s')" % (username, password)
+        if username is not None and password is not None:
+            execute_sql(sql)
+            self.log(sql)
+            self.add_dialog.destroy()
+
 
     def delete_user(self):
         self.log("Delete user...")

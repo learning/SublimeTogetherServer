@@ -35,6 +35,14 @@ def execute_sql(sql):
     conn.commit()
     c.close()
 
+def query_sql(sql):
+    '''Execute a sql clause and return the cursor'''
+    global conn
+    c = conn.cursor()
+    c.execute(sql)
+    conn.commit()
+    return c
+
 connect_database()
 
 class Application(tk.Frame):
@@ -42,6 +50,7 @@ class Application(tk.Frame):
         tk.Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
+        self.load_users()
         self.log("Standby.")
 
     def createWidgets(self):
@@ -50,7 +59,7 @@ class Application(tk.Frame):
         self.right_frame = tk.Frame(self)
         self.right_frame.pack(side="right")
 
-        self.users_label = tk.Label(self.right_frame, text="Onlines")
+        self.users_label = tk.Label(self.right_frame, text="Users")
         self.users_label.pack(side="top")
         self.users_list = tk.Listbox(self.right_frame, height=16)
         self.users_list.pack(side="top")
@@ -66,6 +75,13 @@ class Application(tk.Frame):
         self.control_button = tk.Button(self.left_frame, text="Start",
             command=self.control_server)
         self.control_button.pack(side="bottom")
+
+    def load_users(self):
+        c = query_sql("SELECT * FROM users ORDER BY username ASC")
+        rows = c.fetchall()
+        for row in rows:
+            self.users_list.insert(tk.END, row[0])
+
 
     def log(self, text=""):
         self.console.insert(tk.END, "[%s] %s\n" % (time.strftime("%H:%M:%S"), text))
